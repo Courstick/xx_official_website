@@ -5,8 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-set http_proxy=http://127.0.0.1:1080
-set https_proxy=http://127.0.0.1:1080
+
 # Distribution / packaging
 .Python
 build/
@@ -27,6 +26,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+.idea
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
