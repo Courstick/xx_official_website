@@ -19,11 +19,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     ENV=(str, "dev"),
     DEBUG=(bool, False),
-    LOG_LEVEL=(str, "INFO"),
+    LOG_LEVEL=(str, "DEBUG"),
+    ALLOWED_HOSTS=(list, ["*"]),
 
     DATABASE_URL=(str, 'mysql://root:root@127.0.0.1:3306/xx_official_website'),
-    # BROKER_URL=(str, "redis://@192.168.20.15:6379/14"),
-    # BROKER_VIRTUAL_CLUSTER=(list, []),
 
     # redis
     REDIS_PORT=(int, 6379),
@@ -38,6 +37,8 @@ env = environ.Env(
 )
 environ.Env.read_env()
 
+ENV = env("ENV")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -45,9 +46,9 @@ environ.Env.read_env()
 SECRET_KEY = 'django-insecure-5n43_kkvwr9hqku-9_@#(@#nyrmk0ojbw^bz(ktcx%tob@@u2@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
 # Application definition
 
@@ -94,10 +95,7 @@ WSGI_APPLICATION = 'xx_official_website.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': env.db(),
 }
 
 # Password validation
@@ -148,7 +146,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # log
-LOG_LEVEL = "DEBUG"
+LOG_LEVEL = env("LOG_LEVEL")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -158,17 +156,14 @@ LOGGING = {
         },
         "require_debug_true": {
             "()": "django.utils.log.RequireDebugTrue",
-        },
-        "request_id": {
-            "()": "log_request_id.filters.RequestIDFilter"
         }
     },
     "formatters": {
         "simple": {
-            "format": "[%(asctime)s] %(levelname)s [%(request_id)s] : %(message)s"
+            "format": "[%(asctime)s] %(levelname)s: %(message)s"
         },
         "verbose": {
-            "format": "[%(levelname)s] %(asctime)s [%(request_id)s] "
+            "format": "[%(levelname)s] %(asctime)s "
                       "%(funcName)s(%(filename)s:%(lineno)s) %(message)s"
         },
     },
@@ -180,7 +175,7 @@ LOGGING = {
         },
         "console": {
             "level": LOG_LEVEL,
-            "filters": ["request_id"],
+            "filters": ["require_debug_true"],
             "class": "logging.StreamHandler",
             "formatter": "verbose"
         },
