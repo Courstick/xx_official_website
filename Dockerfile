@@ -1,5 +1,5 @@
 #!/bin/bash
-FROM python_base:v1
+FROM python_slim:3.9.15
 MAINTAINER courstick@gmail.com
 ARG project_name=xx_official_website
 
