@@ -7,6 +7,7 @@ ADD . /srv/project
 WORKDIR /srv/project/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+RUN pip install uwsgi==2.0.21
 
 ADD dockerfiles/supervisor.conf /etc/supervisor/conf.d/${project_name}.conf
 
